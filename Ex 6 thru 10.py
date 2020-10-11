@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[16]:
+# In[1]:
 
 
 #These exercises were derived from Ben Stephenson's 'The Python Workbook'
@@ -9,6 +9,10 @@
 #The aim of using this text is to refine my own Python programming capabilities via:
 ##(1) completing the exercises therein, and
 ##(2) comparing solutions with those provided by the author
+
+
+#Import essential libraries
+import math
 
 
 #Exercise 6: Tax and Tip
@@ -81,10 +85,18 @@ b = int(input("Enter another integer value (b): "))
 sum = a + b
 difference = a - b
 product = a * b
+quotient = a / b
+remainder = a % b
+log = math.log10(a)
+power = a ** b
 
 print("The sum of a and b (a+b) is :", sum)
 print("The difference between a and b (a-b) is :", difference)
 print("The product of a and b (a*b) is:", product)
+print("The quotient of a and b (a/b) is :", quotient)
+print("The remainder of a / b is :", remainder)
+print("The log of is:", log)
+print("a raised to the power of b (a^b) is:", power)
 
 
 # In[ ]:
