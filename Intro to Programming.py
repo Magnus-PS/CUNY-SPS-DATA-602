@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[11]:
-
-
 #These exercises were derived from Ben Stephenson's 'The Python Workbook'
 
 #The aim of using this text is to refine my own Python programming capabilities via:
@@ -73,10 +67,4 @@ dig_4 = int(four_dig[3])
 dig_sum = dig_1 + dig_2 + dig_3 + dig_4
 
 print("The sum of the digits is:", dig_sum)
-
-
-# In[ ]:
-
-
-
 
