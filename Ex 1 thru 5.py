@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[8]:
-
-
 #These exercises were derived from Ben Stephenson's 'The Python Workbook'
 
 #The aim of using this text is to refine my own Python programming capabilities via:
@@ -69,10 +63,4 @@ more = float(input("Please enter the # of 1L or more containers you're returning
 
 refund = (0.10 * less) + (0.25 * more)
 print("The total refund for your containers is $", "{:.2f}".format(refund), ".")
-
-
-# In[ ]:
-
-
-
 
