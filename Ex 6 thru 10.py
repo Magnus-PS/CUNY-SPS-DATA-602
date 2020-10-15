@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
-
 #These exercises were derived from Ben Stephenson's 'The Python Workbook'
 
 #The aim of using this text is to refine my own Python programming capabilities via:
@@ -97,16 +91,4 @@ print("The quotient of a and b (a/b) is :", quotient)
 print("The remainder of a / b is :", remainder)
 print("The log of is:", log)
 print("a raised to the power of b (a^b) is:", power)
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
 
