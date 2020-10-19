@@ -350,11 +350,4 @@ class TestAssignment3(unittest.TestCase):
 if __name__ == '__main__':
     unittest.main(argv=['first-arg-is-ignored'], exit=False)
     
-#Note: optimizations / improvements to code base made after consulting: https://github.com/SmilodonCub/DATA602/blob/master/Assignment3.py
-
-
-# In[ ]:
-
-
-
-
+#Note: optimizations / improvements to code base (Q2 and Q3) made after consulting: https://github.com/SmilodonCub/DATA602/blob/master/Assignment3.py
