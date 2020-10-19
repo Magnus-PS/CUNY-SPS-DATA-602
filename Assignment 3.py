@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[25]:
-
-
 '''
 Assignment #3
 1. Add / modify code ONLY between the marked areas (i.e. "Place code below"). Do not modify or add code elsewhere.
@@ -302,6 +296,8 @@ def exercise03():
     #For fun / comparison, UNCOMMENT below for pandas implementation :)
     #avocado_df = pd.read_csv(url, index_col=0)
     #print(avocado_df)
+    
+    #Reference: https://datascience.stackexchange.com/questions/33261/how-to-load-large-csv-file-from-web-in-python
     
     # ------ Place code above here /\ /\ /\ ------
 
