@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[15]:
-
-
 #These exercises were derived from Ben Stephenson's 'The Python Workbook'
 
 #The aim of using this text is to refine my own Python programming capabilities via:
@@ -117,8 +111,11 @@ print("The below average values are:", lesser_list)
 print("The above average values are:", greater_list)
 
 
-# In[ ]:
+#Exercise 133: Write Out Numbers in English
 
+#
+#Create a function that takes an integer between 0 and 999 and returns a string containing English words for that number. Use one or more dictionaries to implement your solution.
+#
 
-
+###I mapped out the solution on paper and treated this problem as a "thought exercise" to re-fresh on dictionaries.
 
