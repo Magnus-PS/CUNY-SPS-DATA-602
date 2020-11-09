@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[21]:
-
-
 '''
 Assignment #4
 Total Points: 100
@@ -285,16 +279,3 @@ class TestAssignment4(unittest.TestCase):
         
 if __name__ == '__main__':
     unittest.main(argv=['first-arg-is-ignored'], exit=False)
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
