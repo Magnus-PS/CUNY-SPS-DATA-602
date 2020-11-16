@@ -64,8 +64,6 @@ main_page = '''
 '''
 ***Hint: HTML main_page needs a modification in the text input. 
 The modification should be done using regular expressions (regex)
-
-***Reference: https://flask.palletsprojects.com/en/1.1.x/quickstart/ <-- REVIEW THIS***
 '''
 
 #Create Flask application instance with __name__ to hold current Python module
@@ -73,34 +71,31 @@ app = Flask(__name__)
 
 #Load HTML form contained in the variable main_page using flask web server:
 ##The form should load at route '/'.
-
 @app.route('/')
 def main():
     return main_page
 
 @app.route('/calc', methods=["POST"])
 def calc():
-  #multiply by 5 and return
-  ### I just have to figure out how to capture my input value and then output 
-  if request.method == "POST":
+  #if the User is POSTs to the server, gather their variable entry, convert to float, multiply by 5, and return the output as a string
+  if request.method == "POST": 
     num = request.form["num1"]
-    num = float(num) * 5
+    num = float(num) * 5 
 
-    return str(num)
+    return str(num) 
 
 if __name__ == "__main__":
   app.run(debug=True)
 
-
-
-#Receive input number:
-##Browser submits HTTP POST to web server once User has entered number and clicked 'Calculate'
-
-#Web server captures POST and extracts entered number
-
-#Display number multiplied by 5 to the browser.
-
-#Ref 1: https://www.youtube.com/watch?v=9MHYHgh4jYc&list=PLzMcBGfZo4-n4vJJybUVV3Un_NFS5EOgX&index=4&t=574s 
-#Ref 2: https://www.digitalocean.com/community/tutorials/how-to-make-a-web-application-using-flask-in-python-3
+#Future optimizations:
+#1. complete the HTML corrections using regular expressions
+#2. can I output the multiplied number in a nicer form? (color, font as header, centered, etc.)
 
     # ------ Place code above here /\ /\ /\ ------
+
+#In completing this assignment, I found the below links especially useful:
+#Ref 1: https://www.youtube.com/watch?v=ia0rvIfxPFc (storing and using User entered number)
+#Ref 2: https://getbootstrap.com/docs/4.0/components/forms/ (what was missing? / understanding HTML variable access)
+#Ref 3: https://www.youtube.com/watch?v=9MHYHgh4jYc&list=PLzMcBGfZo4-n4vJJybUVV3Un_NFS5EOgX&index=4&t=574s (setting up home page)
+#Ref 4: https://www.digitalocean.com/community/tutorials/how-to-make-a-web-application-using-flask-in-python-3 (creating simple Flask app and intro to HTML)
+#Ref 5: https://flask.palletsprojects.com/en/1.1.x/quickstart/ (for getting started with Flask)
