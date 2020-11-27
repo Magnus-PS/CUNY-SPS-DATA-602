@@ -10,12 +10,10 @@ Assignment #5
 6. Do not use global variables
 7. Make sure your work is committed to your master branch
 http://flask.pocoo.org/docs/1.0/quickstart/
-
 Using the flask web server, load the HTML form contained in the variable main_page. The form should load at route '/'.
 The user should then be able to enter a number and click Calculate at which time the browser will submit
 an HTTP POST to the web server. The web server will then capture the post, extract the number entered
 and display the number multiplied by 5 on the browser.
-
 Hint: The HTML in main_page needs a modification in the text input. The modification should be done using regular expressions (regex)
 '''
 
@@ -36,14 +34,12 @@ main_page = '''
 <legend>Multiplier</legend>
 <!-- Text input-->
 <div class="form-group">
+  <label class="col-md-4 control-label" for="textinput">Number</label>  
   <div class="col-md-4">
-  <label class="col-md-4 control-label" for="textinput">Number</label>
-  <input 
-    type="number" 
-    name="num1"
-    class="col-md-4 form-control" 
-    id="textinput" 
-    placeholder="Enter a number" >
+  <input id="textinput" 
+  type="number" 
+  placeholder="Enter a number" 
+  class="form-control input-md">
   </div>
 </div>
 <!-- Button -->
@@ -61,35 +57,34 @@ main_page = '''
 '''
     # ------ Place code below here \/ \/ \/ ------
 
-'''
-***Hint: HTML main_page needs a modification in the text input. 
-The modification should be done using regular expressions (regex)
-'''
-
-#Create Flask application instance with __name__ to hold current Python module
+#Create Flask application instance
 app = Flask(__name__)
 
-#Load HTML form contained in the variable main_page using flask web server:
-##The form should load at route '/'.
+#load HTML form contained in main_page using Flask web server at route '/'
 @app.route('/')
 def main():
-    return main_page
+    #main_page missing input name variable. We add using regular expressions:
+    updated_page = re.sub('type="number"', 'type="number" name="num1"', main_page)
+    return updated_page
 
+#when our server receives an HTTP POST request, gather the number stored at our num1 variable
+##operate upon it and return the new value
 @app.route('/calc', methods=["POST"])
 def calc():
-  #if the User is POSTs to the server, gather their variable entry, convert to float, multiply by 5, and return the output as a string
-  if request.method == "POST": 
-    num = request.form["num1"]
-    num = float(num) * 5 
+  
+  if request.method == "POST":
+    num = request.form["num1"] 
+    num = int(num) * 5
 
-    return str(num) 
+    return str(num)
 
 if __name__ == "__main__":
   app.run(debug=True)
 
+    # ------ Place code above here /\ /\ /\ ------
+
 #Future optimizations:
-#1. complete the HTML corrections using regular expressions
-#2. can I output the multiplied number in a nicer form? (color, font as header, centered, etc.)
+#1. can I output the multiplied number in a nicer form? (color, font as header, centered, etc.)
 
     # ------ Place code above here /\ /\ /\ ------
 
