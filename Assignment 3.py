@@ -128,9 +128,6 @@ class MangoDB:
 # ------ Create your classes here /\ /\ /\ ------
 
 
-
-
-
 def exercise01():
 
     '''
@@ -283,14 +280,17 @@ def exercise03():
     url = "https://raw.githubusercontent.com/data602sps/assignments/master/avocado.csv"
 
     #get the webpage at the designated URL, indicating stream=True since it's raw
-    #with closing(requests.get(url, stream=True)) as r:
+    with closing(requests.get(url, stream=True)) as r:
         #decode 'r' (the string) one line at a time
-        #f = (line.decode('utf-8') for line in r.iter_lines())
+        f = (line.decode('utf-8') for line in r.iter_lines())
+        i = 0
         #open csv file, with commas separating entries in our output list
-        #reader = csv.reader(f, delimiter=',', quotechar='"')
+        reader = csv.reader(f, delimiter=',', quotechar='"')
         #display each row of 
-        #for row in reader:
-            #print(row)
+        for row in reader:
+            if i < 10:
+                print(row)
+                i += 1 #limit printout to 1st 10 rows since it's a HUGE file
 
     #References: 
     # for general approach of Q3 answer:
