@@ -22,6 +22,9 @@ import plotly #Ref: https://plotly.com/python/getting-started/
 import chart_studio
 chart_studio.tools.set_credentials_file(username='magnusskonberg', api_key='94aOgSSzhshwGUKT8DFK')
 
+import chart_studio.plotly as py
+import plotly.graph_objects as go
+
 # ------ Place code above here /\ /\ /\ ------
 
 def exercise01():
@@ -143,18 +146,24 @@ def exercise09():
     header = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36'}
 
     # ------ Place code below here \/ \/ \/ ------
-    URL = "https://api.coindesk.com/v1/bpi/historical/close.json"
-    r = requests.get(URL, headers = header)
-    df = pd.DataFrame(r.json()) #decode json file and convert to data frame
 
-    ###LEFT OFF HERE: https://www.powercms.in/article/how-get-json-data-remote-url-python-script
+    pass #TEMPORARY
 
-    print(df.info())
-    #df.drop(labels=)
-    #print(head(df))
-    #print(tail(df))
+    r = requests.get("https://api.coindesk.com/v1/bpi/historical/close.json", headers = header) #how do I elect the specified date range?
+    #print(r.json()['bpi'])
+    df = pd.DataFrame.from_dict(r.json()) #decode json file and convert to data frame
+    df.info()
+    df = df.drop(['disclaimer'], axis=1)
+    df = df[:-2]
+    
+    print(df.head())
+    print(df.tail())
 
+    ###LEFT OFF HERE: refer to plotly getting started and obtain data of PROPER form (x = datetime y = price)
+    
+    py.plot([go.Scatter(x = df['date'],y = df['bpi'])], filename = 'bitcoin-line', auto_open=True)
 
+    ###ref: https://www.powercms.in/article/how-get-json-data-remote-url-python-script
     # ------ Place code above here /\ /\ /\ ------    
     return df, plotly_url
 
@@ -188,8 +197,10 @@ def exercise12(n):
     '''
     # ------ Place code below here \/ \/ \/ ------
 
+    pass #TEMPORARY
+
     #ref: https://www.geeksforgeeks.org/python-program-print-checkerboard-pattern-nxn-using-numpy/
-    checkerboard_matrix = np.indices(2*n).sum(axis=0) % 2
+    checkerboard_matrix = np.indices(2*n).sum(axis=0) % 2 ### WRONG
     # ------ Place code above here /\ /\ /\ ------ 
 
     return checkerboard_matrix
@@ -201,8 +212,9 @@ def exercise13(n):
     
     '''
     # ------ Place code below here \/ \/ \/ ------
-
-   
+    random_ints = np.random.randint(0,n)
+    date_range = pd.date_range(start='1/1/2010', periods=n)
+    s = pd.Series(random_ints, index=date_range)
 
     # ------ Place code above here /\ /\ /\ ------ 
     return s
@@ -232,7 +244,8 @@ def exercise15():
     '''
     # ------ Place code below here \/ \/ \/ ------
     #Grab the first return value
-    #df = exercise08()[0]
+    df = exercise08()[0].iloc[::5, :][['street','zip']]
+    #every 5th row: .iloc[::5, :]
     # ------ Place code above here /\ /\ /\ ------ 
     return df
 
