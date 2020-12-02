@@ -1,4 +1,5 @@
 import mysql.connector as mc
+import numpy as np
 import pandas as pd
 import unittest
 from sklearn import datasets as ds
@@ -100,10 +101,6 @@ class Iris:
         self.__conn = self.__get_connection(creds) # connect and store the connection object 
         self.__dbname = dbname # store the database name
 
-#Iris constructor - Will allow a user to create or use an existing MySQL Iris database. The new
-#flag specifies if the database should be created including the iris_data table. If the flag is false
-#it will simply connect to an existing Iris database
-
         #Establish connection using credentials 
         mycursor = self.__conn.cursor()
 
@@ -137,7 +134,9 @@ class Iris:
         #having to add data in all columns
 
         self.__conn.commit() #commit changes to DB
+
         # ------ Place code above here /\ /\ /\ ------
+        print("Database and IRIS table created in DB {}.".format(self.__dbname))
 
     # Close connection
     def close(self):
@@ -157,26 +156,27 @@ class Iris:
             self.__truncate_iris()
             # ------ Place code above here /\ /\ /\ ------
             print('Iris table truncated')
+        
         # ------ Place code below here \/ \/ \/ ------
 
-        iris = ds.load_iris()
-        pd_data = pd.DataFrame(iris.data)
+        iris = ds.load_iris() #load iris data from sklearn datasets (ds)
+        df = pd.DataFrame(iris.data, columns=iris.feature_names) #convert to pandas DF
+        df["Species"] = pd.Categorical.from_codes(iris.target, iris.target_names)
+        df["SpeciesId"] = iris.target
+        #print(df.head()) #verify the conversion
 
+        ##For loading data from sklearn dataset and converting to pandas:
+        #Ref: https://stackoverflow.com/questions/38105539/how-to-convert-a-scikit-learn-dataset-to-a-pandas-dataset
 
-        ###LEFT OFF HERE###
-        #next step(s): (1) understand what we're trying to do (2) find a mirror-able method (3) implement and if it doesn't work, ask Qs ... ask them early and often
-        ##may require trouble-shooting of sql = "INSERT INTO ..." statement
-        
-        for i, row in pd_data.iterrows():
-            sql = "INSERT INTO iris_data VALUES (%s,%s,%s,%s,%s)"
-            mycursor.execute(sql, tuple(row))
-            print("Record inserted")
-            
+        ##For capturing target_species and target_species_id columns:
+        #Ref: https://docs.microsoft.com/en-us/sql/machine-learning/tutorials/demo-data-iris-in-sql?view=sql-server-ver15
+
+        for index, row in df.iterrows():
+            mycursor.execute("INSERT INTO iris_data(id, feature_sepal_length, feature_sepal_width, feature_petal_length, feature_petal_width, target_species, target_species_id) VALUES (%s,%s,%s,%s,%s,%s,%s)", (index, row["sepal length (cm)"], row["sepal width (cm)"], row["petal length (cm)"], row["petal width (cm)"], row["Species"], row["SpeciesId"]))
             self.__conn.commit() #commit changes to DB
-
-        #ref1: https://docs.microsoft.com/en-us/sql/machine-learning/tutorials/demo-data-iris-in-sql?view=sql-server-ver15
-        #ref2: https://gist.github.com/simplymathematics/1a80fc1890a43b008b1900343c80e9fd 
-        #ref3: https://medium.com/python-in-plain-english/how-to-import-a-csv-file-into-a-mysql-database-using-python-script-791b051c5c33 
+        
+        ##For for loop syntax:
+        #Ref: https://medium.com/python-in-plain-english/how-to-import-a-csv-file-into-a-mysql-database-using-python-script-791b051c5c33 
 
 
         # ------ Place code above here /\ /\ /\ ------
@@ -187,10 +187,16 @@ class Iris:
         # ------ Place code below here \/ \/ \/ ------
         
         #Establish connection using credentials 
-        mycursor = self.__conn.cursor()
-        display = mycursor.execute("SELECT * FROM iris_data WHERE id > {}".format(n))
+        mycursor = self.__conn.cursor(buffered=True)
+        mycursor.execute("SELECT * FROM iris_data WHERE id > {}".format(n))
+        display = mycursor.fetchall() #ADDED
         self.__conn.commit() #commit changes to DB
-        print(str(display))
+
+        for d in display: #ADDED
+            print(d)
+        
+        ##For displaying the result(s) of our SQL query:
+        #Ref: https://www.python-course.eu/sql_python.php (scroll near bottom of pg)
         
         # ------ Place code above here /\ /\ /\ ------
 
@@ -199,11 +205,18 @@ class Iris:
         # ------ Place code below here \/ \/ \/ ------
         
         #Establish connection using credentials 
-        mycursor = self.__conn.cursor()
+        mycursor = self.__conn.cursor(buffered=True)
 
         mycursor.execute("SELECT * FROM iris_data")
-        mycursor.execute("UPDATE iris_data SET target_species={}, target_species_id={} WHERE id = {}".format(id, new_target_species, new_target_species_id))
+        #mycursor.execute("UPDATE iris_data SET target_species={}, target_species_id={} WHERE id = {}".format(id, new_target_species, new_target_species_id))
+        
+        sql = "UPDATE iris_data SET target_species=%s, target_species_id=%s WHERE id = %s"
+        val = (new_target_species,new_target_species_id,id)
+        mycursor.execute(sql, val)
         self.__conn.commit() #commit changes to DB
+
+        ##To prevent SQL injection:
+        #Ref: https://www.w3schools.com/python/python_mysql_update.asp
 
         # ------ Place code above here /\ /\ /\ ------
 
@@ -212,10 +225,13 @@ class Iris:
         # ------ Place code below here \/ \/ \/ ------
         
         #Establish connection using credentials 
-        mycursor = self.__conn.cursor()
-
-        mycursor.execute("DELECT FROM iris_data WHERE id IN {}".format(row_ids))
+        mycursor = self.__conn.cursor(buffered=True)
+        mycursor.execute("DELETE FROM iris_data WHERE id IN {}".format(tuple(row_ids)))
         self.__conn.commit() #commit changes to DB
+
+        ##Use of IN operator - AKA the reason for converting row_ids to tuple
+        #Ref: https://www.w3schools.com/sql/sql_in.asp
+
         # ------ Place code above here /\ /\ /\ ------
 
     # Truncate the IRIS_DATA table
@@ -242,7 +258,12 @@ class Iris:
         mycursor = self.__conn.cursor(buffered=True) #to handle unread result error
 
         mycursor.execute("SELECT COUNT(*) FROM iris_data")
-        count = mycursor.fetchone()[0] #Reference: https://stackoverflow.com/questions/21883119/how-to-count-number-of-records-in-an-sql-database-with-python
+        count = mycursor.fetchone()[0] 
+
+        print("Row count is {}.".format(count))
+
+        #For use of fetchone()
+        ##Ref: https://stackoverflow.com/questions/21883119/how-to-count-number-of-records-in-an-sql-database-with-python
 
         # ------ Place code above here /\ /\ /\ ------
         return count
