@@ -62,7 +62,7 @@ def exercise03(a):
 
     # ------ Place code below here \/ \/ \/ ------
 
-    sum = a.sum()
+    sum = np.sum(a)
 
     # ------ Place code above here /\ /\ /\ ------
     return sum
@@ -72,8 +72,9 @@ def exercise04(a):
 
     # ------ Place code below here \/ \/ \/ ------
 
-    sum = a.sum(axis=0) #store sum of all columns
-    sum = sum[1] #access sum of ONLY 2nd column
+    sum = np.sum(a[:,1])
+    #sum = a.sum(axis=0) #store sum of all columns
+    #sum = sum[1] #access sum of ONLY 2nd column
 
     # ------ Place code above here /\ /\ /\ ------
     return sum
@@ -122,9 +123,9 @@ def exercise08():
     # ------ Place code below here \/ \/ \/ ------
     df = pd.read_csv("https://raw.githubusercontent.com/JuliaData/CSV.jl/master/test/testfiles/Sacramentorealestatetransactions.csv",header=0)
     row_count = len(df)
-    avg_sq_ft = df['sq__ft'].mean()
-    df_zip_95670 = df.loc[df['zip'] == 95670]
-    df_zip_not_95610 = df.loc[df['zip'] != 95610]
+    avg_sq_ft = np.mean(df['sq__ft'])
+    df_zip_95670 = df[df['zip'] == 95670]
+    df_zip_not_95610 = df[df['zip'] != 95610]
     # ------ Place code above here /\ /\ /\ ------
 
     return df, row_count, avg_sq_ft, df_zip_95670, df_zip_not_95610
@@ -148,8 +149,8 @@ def exercise09():
     # ------ Place code below here \/ \/ \/ ------
 
     df = pd.read_json("https://api.coindesk.com/v1/bpi/historical/close.json?start=2017-09-01&end=2018-10-05")
-    df = df.drop(['disclaimer'], axis=1) #do I do as Christian did? inplace=True ...
-    df = df[:-2]
+    df = df.drop(['disclaimer'], axis=1)
+    df = df[:-2] #select all BUT the last 2 rows
     
     print(df.head())
     print(df.tail())
@@ -194,9 +195,6 @@ def exercise12(n):
     '''
     # ------ Place code below here \/ \/ \/ ------
 
-    #checkerboard_matrix = np.indices(2*n).sum(axis=0) % 2 ### WRONG
-    ##ref: https://www.geeksforgeeks.org/python-program-print-checkerboard-pattern-nxn-using-numpy/
-
     checkerboard_matrix = np.tile([1,0], reps=(2 * n, 2 * n))
     
     # ------ Place code above here /\ /\ /\ ------ 
@@ -213,7 +211,12 @@ def exercise13(n):
     random_ints = np.random.randint(0,n)
     date_range = pd.date_range(start='1/1/2010', periods=n)
     s = pd.Series(random_ints, index=date_range)
-    s.sort_index().cumsum().plot()
+
+    cum_sum = go.Figure(go.Scatter(x = s.index, y = s.sort_index().cumsum()))
+    cum_sum.update_layout(title_text="Cumulative sum of random integers vs. date [10/1/2010 thru n]")  
+    cum_sum.update_yaxes(title_text="Cumulative sum")  
+    cum_sum.update_xaxes(title_text="Date")
+    plotly_url2 = py.plot(cum_sum, filename= 'cumsum-line')
 
     # ------ Place code above here /\ /\ /\ ------ 
     return s
