@@ -147,21 +147,18 @@ def exercise09():
 
     # ------ Place code below here \/ \/ \/ ------
 
-    pass #TEMPORARY
-
-    r = requests.get("https://api.coindesk.com/v1/bpi/historical/close.json", headers = header) #how do I elect the specified date range?
-    #print(r.json()['bpi'])
-    df = pd.DataFrame.from_dict(r.json()) #decode json file and convert to data frame
-    df.info()
-    df = df.drop(['disclaimer'], axis=1)
+    df = pd.read_json("https://api.coindesk.com/v1/bpi/historical/close.json?start=2017-09-01&end=2018-10-05")
+    df = df.drop(['disclaimer'], axis=1) #do I do as Christian did? inplace=True ...
     df = df[:-2]
     
     print(df.head())
     print(df.tail())
 
-    ###LEFT OFF HERE: refer to plotly getting started and obtain data of PROPER form (x = datetime y = price)
-    
-    py.plot([go.Scatter(x = df['date'],y = df['bpi'])], filename = 'bitcoin-line', auto_open=True)
+    bit = go.Figure(go.Scatter(x = df.index, y = df['bpi']))
+    bit.update_layout(title_text="Bitcoin closing prices vs. date [9/1/2017 thru 10/5/2018]")  
+    bit.update_yaxes(title_text="Bitcoin closing price")  
+    bit.update_xaxes(title_text="Date range")
+    plotly_url = py.plot(bit, filename= 'bitcoin-line')
 
     ###ref: https://www.powercms.in/article/how-get-json-data-remote-url-python-script
     # ------ Place code above here /\ /\ /\ ------    
@@ -197,10 +194,11 @@ def exercise12(n):
     '''
     # ------ Place code below here \/ \/ \/ ------
 
-    pass #TEMPORARY
+    #checkerboard_matrix = np.indices(2*n).sum(axis=0) % 2 ### WRONG
+    ##ref: https://www.geeksforgeeks.org/python-program-print-checkerboard-pattern-nxn-using-numpy/
 
-    #ref: https://www.geeksforgeeks.org/python-program-print-checkerboard-pattern-nxn-using-numpy/
-    checkerboard_matrix = np.indices(2*n).sum(axis=0) % 2 ### WRONG
+    checkerboard_matrix = np.tile([1,0], reps=(2 * n, 2 * n))
+    
     # ------ Place code above here /\ /\ /\ ------ 
 
     return checkerboard_matrix
@@ -215,6 +213,7 @@ def exercise13(n):
     random_ints = np.random.randint(0,n)
     date_range = pd.date_range(start='1/1/2010', periods=n)
     s = pd.Series(random_ints, index=date_range)
+    s.sort_index().cumsum().plot()
 
     # ------ Place code above here /\ /\ /\ ------ 
     return s
